@@ -6,7 +6,7 @@
 //  Copyright © 2019 Apple. All rights reserved.
 //
 
-class toDo {
+class ToDo {
     var name = ""
     var important = false
 }

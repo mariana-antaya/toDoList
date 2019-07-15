@@ -10,7 +10,8 @@ import UIKit
 
 class ToDoTableViewController: UITableViewController {
     
-    var toDos : [toDo] = []
+    var toDos : [ToDo] = []
+     var previousVC = ToDoTableViewController()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,7 +22,6 @@ class ToDoTableViewController: UITableViewController {
     // MARK: - Table view data source
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
         return toDos.count
     }
     
@@ -39,17 +39,32 @@ class ToDoTableViewController: UITableViewController {
         return cell
     }
     
-    func createToDos() -> [toDo] {
+    func createToDos() -> [ToDo] {
         
-        let swift = toDo()
+        let swift = ToDo()
         swift.name = "Learn Swift"
         swift.important = true
         
-        let dog = toDo()
+        let dog = ToDo()
         dog.name = "Walk the Dog"
         // important is set to false by default
         
         return [swift, dog]
     }
-
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let addVC = segue.destination as? ToDoTableViewController {
+            addVC.previousVC = self
+        }
+        if let completeVC = segue.destination as? CompleteToDoTableViewController {
+            if let toDo = sender as? ToDo {
+                completeVC.selectedToDo = toDo
+                completeVC.previousVC = self
+            }
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath){
+             let toDo = toDos[indexPath.row]
+            
+            performSegue(withIdentifier: "moveToComplete", sender: toDo)
+        }
+    }
+}
 }
